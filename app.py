@@ -223,11 +223,11 @@ with st.sidebar:
     )
     st.markdown("---")
     st.markdown(
-        "<small style='color:#94a3b8; line-height:1.7'>"
-        "<b style='color:#e2e8f0'>Cláudio Ferreira Neves</b><br>"
-        "Especialista em Ciência de Dados<br>e Inteligência Artificial<br>"
-        "Especialista em Business Intelligence,<br>Big Data e Analytics"
-        "</small>",
+        "<div style='line-height:1.35; font-size:0.78rem'>"
+        "<b style='color:#e2e8f0; font-size:0.82rem'>Cláudio Ferreira Neves</b><br>"
+        "<span style='color:#94a3b8'>Especialista em Ciência de Dados e Inteligência Artificial</span><br>"
+        "<span style='color:#94a3b8'>Especialista em Business Intelligence, Big Data e Analytics</span>"
+        "</div>",
         unsafe_allow_html=True,
     )
 

@@ -175,11 +175,27 @@ O dashboard foi desenvolvido com foco em **usabilidade para usuários não técn
 
 ## Datasets
 
-| Dataset | Fonte | Uso |
-|---|---|---|
-| Credit Card Fraud Detection | [Kaggle (mlg-ulb)](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) | Pipeline principal |
-| IEEE-CIS Fraud Detection | [Kaggle (competição)](https://www.kaggle.com/competitions/ieee-fraud-detection) | Feature engineering avançado |
-| Give Me Some Credit | [Kaggle (brycecf)](https://www.kaggle.com/datasets/brycecf/give-me-some-credit-dataset) | Credit scoring |
+| Dataset | Fonte | Linhas | Uso |
+|---|---|---|---|
+| Credit Card Fraud Detection | [Kaggle (mlg-ulb)](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) | **284.807** | Pipeline principal |
+| IEEE-CIS Fraud Detection | [Kaggle (competição)](https://www.kaggle.com/competitions/ieee-fraud-detection) | ~590.000 | Feature engineering avançado |
+| Give Me Some Credit | [Kaggle (brycecf)](https://www.kaggle.com/datasets/brycecf/give-me-some-credit-dataset) | 150.000 | Credit scoring |
+
+### Por que o repositório contém apenas 2.000 linhas?
+
+O dataset original **Credit Card Fraud Detection** possui **284.807 transações** e pesa **66 MB** — acima do limite recomendado para arquivos no GitHub (50 MB) e incompatível com o Streamlit Cloud, que não permite armazenar dados brutos no ambiente de deploy.
+
+Para que o dashboard funcione online sem exigir credenciais do Kaggle, o repositório inclui `data/sample/creditcard_sample.csv`: uma **amostra sintética de 2.000 linhas** gerada com as mesmas propriedades estatísticas do dataset original (distribuição de valores, proporção de fraudes, correlações entre variáveis V1–V28).
+
+> **Os resultados do modelo apresentados no dashboard (ROC-AUC 0.9488, KS 89.7, Gini 89.8) foram obtidos treinando no dataset completo de 284.807 transações**, rodando localmente com `python pipeline.py --dataset fraud --quick`. A amostra sintética serve apenas para visualização interativa no Streamlit Cloud.
+
+Para reproduzir os resultados completos localmente:
+
+```bash
+# 1. Configure as credenciais do Kaggle (~/.kaggle/kaggle.json)
+python data_download.py --dataset fraud   # baixa as 284.807 transações reais
+python pipeline.py --dataset fraud --quick
+```
 
 ---
 
