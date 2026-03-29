@@ -280,7 +280,7 @@ if pagina == "🏠  Início":
         <div class="metric-card" style='margin-bottom:12px'>
             <div class="label">Dataset</div>
             <div class="value">284.807</div>
-            <div class="subtext">transacoes analisadas</div>
+            <div class="subtext">transações analisadas</div>
         </div>
         <div class="metric-card" style='margin-bottom:12px'>
             <div class="label">Fraudes Reais</div>
@@ -288,9 +288,9 @@ if pagina == "🏠  Início":
             <div class="subtext">apenas 0,17% do total</div>
         </div>
         <div class="metric-card" style='margin-bottom:12px'>
-            <div class="label">Precisao do Modelo</div>
+            <div class="label">Precisão do Modelo</div>
             <div class="value">94,9%</div>
-            <div class="subtext">ROC-AUC na validacao</div>
+            <div class="subtext">ROC-AUC na validação</div>
         </div>
         <div class="metric-card">
             <div class="label">Tecnologia</div>
@@ -334,16 +334,16 @@ elif pagina == "📊  Os Dados":
     st.markdown("""
     <div class="info-card">
     <b>De onde vêm esses dados?</b><br>
-    Os dados são transacoes reais de cartao de credito europeu (anonimizadas por seguranca).
-    Cada linha representa uma transacao — um momento em que alguem usou o cartao para comprar algo.
-    As colunas V1 a V28 sao variaveis transformadas matematicamente para proteger a privacidade
-    dos clientes (usando uma tecnica chamada PCA).
+    Os dados são transações reais de cartão de crédito europeu (anonimizadas por segurança).
+    Cada linha representa uma transação — um momento em que alguém usou o cartão para comprar algo.
+    As colunas V1 a V28 são variáveis transformadas matematicamente para proteger a privacidade
+    dos clientes (usando uma técnica chamada PCA).
     </div>
     """, unsafe_allow_html=True)
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Total de transacoes", f"{len(df):,}")
-    col2.metric("Transacoes legitimas", f"{(df['Class']==0).sum():,}")
+    col1.metric("Total de transações", f"{len(df):,}")
+    col2.metric("Transações legítimas", f"{(df['Class']==0).sum():,}")
     col3.metric("Fraudes", f"{(df['Class']==1).sum():,}")
     col4.metric("Taxa de fraude", f"{df['Class'].mean():.4%}")
 
@@ -353,10 +353,10 @@ elif pagina == "📊  Os Dados":
     st.markdown("### O Grande Desafio: O Desbalanceamento")
     st.markdown("""
     <div class="info-card warning">
-    <b>Por que isso e um problema?</b><br><br>
-    Se um modelo dissesse <em>"toda transacao e legitima"</em>, ele acertaria 99,83% das vezes!
-    Mas seria completamente inutil para detectar fraudes. Por isso precisamos de tecnicas especiais
-    para lidar com esse desequilibrio.
+    <b>Por que isso é um problema?</b><br><br>
+    Se um modelo dissesse <em>"toda transação é legítima"</em>, ele acertaria 99,83% das vezes!
+    Mas seria completamente inútil para detectar fraudes. Por isso precisamos de técnicas especiais
+    para lidar com esse desequilíbrio.
     </div>
     """, unsafe_allow_html=True)
 
@@ -364,14 +364,14 @@ elif pagina == "📊  Os Dados":
     with col1:
         counts = df["Class"].value_counts().reset_index()
         counts.columns = ["Tipo", "Quantidade"]
-        counts["Tipo"] = counts["Tipo"].map({0: "Legitima", 1: "Fraude"})
+        counts["Tipo"] = counts["Tipo"].map({0: "Legítima", 1: "Fraude"})
         counts["Percentual"] = (counts["Quantidade"] / counts["Quantidade"].sum() * 100).round(4)
 
         fig = px.pie(
             counts, values="Quantidade", names="Tipo",
             color="Tipo",
-            color_discrete_map={"Legitima": "#3b82f6", "Fraude": "#ef4444"},
-            title="Distribuicao: 99,83% legitimas vs 0,17% fraudes",
+            color_discrete_map={"Legítima": "#3b82f6", "Fraude": "#ef4444"},
+            title="Distribuição: 99,83% legítimas vs 0,17% fraudes",
         )
         fig.update_traces(textposition="inside", textinfo="percent+label", textfont_size=14)
         fig.update_layout(showlegend=False, height=360)
@@ -383,37 +383,37 @@ elif pagina == "📊  Os Dados":
         <b>Analogia do dia a dia:</b><br><br>
         Imagine uma escola com 1.000 alunos. Se apenas 2 deles fizeram cola em uma prova,
         como o professor detecta esses 2 sem punir os 998 inocentes?<br><br>
-        O desbalanceamento e exatamente esse cenario: a "maioria esmagadora" pode
+        O desbalanceamento é exatamente esse cenário: a "maioria esmagadora" pode
         enganar o modelo.
         </div>
 
         <div class="info-card success" style='margin-top:12px'>
-        <b>Nossa solucao: SMOTE</b><br><br>
-        SMOTE (Synthetic Minority Oversampling Technique) cria exemplos sinteticos de fraudes
-        para que o modelo "veja" mais exemplos de fraude durante o treinamento. E como dar
+        <b>Nossa solução: SMOTE</b><br><br>
+        SMOTE (Synthetic Minority Oversampling Technique) cria exemplos sintéticos de fraudes
+        para que o modelo "veja" mais exemplos de fraude durante o treinamento. É como dar
         ao modelo mais "casos de estudo" para aprender.
         </div>
         """, unsafe_allow_html=True)
 
     # Distribuição de valores
     st.markdown("---")
-    st.markdown("### Valor das Transacoes: Legitimas vs Fraudes")
+    st.markdown("### Valor das Transações: Legítimas vs Fraudes")
 
     st.markdown("""
     <div class="info-card">
-    Abaixo, comparamos os valores das transacoes fraudulentas com as legitimas.
-    Embora as fraudes possam ocorrer em qualquer valor, ha padroes distintos —
-    fraudes frequentemente envolvem valores menores (para testar o cartao) ou muito grandes.
+    Abaixo, comparamos os valores das transações fraudulentas com as legítimas.
+    Embora as fraudes possam ocorrer em qualquer valor, há padrões distintos —
+    fraudes frequentemente envolvem valores menores (para testar o cartão) ou muito grandes.
     </div>
     """, unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     with col1:
         fig = px.histogram(
-            df, x="Amount", color=df["Class"].map({0: "Legitima", 1: "Fraude"}),
+            df, x="Amount", color=df["Class"].map({0: "Legítima", 1: "Fraude"}),
             nbins=80, barmode="overlay", opacity=0.7,
-            color_discrete_map={"Legitima": "#3b82f6", "Fraude": "#ef4444"},
-            title="Distribuicao dos Valores (R$)",
+            color_discrete_map={"Legítima": "#3b82f6", "Fraude": "#ef4444"},
+            title="Distribuição dos Valores (R$)",
             labels={"color": "Tipo", "Amount": "Valor (R$)"},
         )
         fig.update_layout(height=340, legend_title="Tipo")
@@ -421,15 +421,15 @@ elif pagina == "📊  Os Dados":
 
     with col2:
         stats = df.groupby("Class")["Amount"].describe().reset_index()
-        stats["Class"] = stats["Class"].map({0: "Legitima", 1: "Fraude"})
+        stats["Class"] = stats["Class"].map({0: "Legítima", 1: "Fraude"})
         stats = stats.round(2)
-        st.markdown("**Estatisticas por tipo de transacao:**")
+        st.markdown("**Estatísticas por tipo de transação:**")
         st.dataframe(stats.set_index("Class").T, use_container_width=True)
 
         st.markdown("""
         <div class="info-card warning" style='margin-top:8px'>
-        <b>Curiosidade:</b> O valor medio das fraudes (R$122) e maior do que o das transacoes
-        legitimas (R$88), mas a mediana das fraudes (R$9,25) e muito menor — muitos
+        <b>Curiosidade:</b> O valor médio das fraudes (R$122) é maior do que o das transações
+        legítimas (R$88), mas a mediana das fraudes (R$9,25) é muito menor — muitos
         fraudadores testam com valores pequenos primeiro.
         </div>
         """, unsafe_allow_html=True)
@@ -440,22 +440,22 @@ elif pagina == "📊  Os Dados":
 
     df["hour"] = (df["Time"] / 3600).astype(int) % 24
     hourly = df.groupby(["hour", "Class"]).size().reset_index(name="count")
-    hourly["Tipo"] = hourly["Class"].map({0: "Legitima", 1: "Fraude"})
+    hourly["Tipo"] = hourly["Class"].map({0: "Legítima", 1: "Fraude"})
 
     fig = px.line(
         hourly, x="hour", y="count", color="Tipo",
-        color_discrete_map={"Legitima": "#3b82f6", "Fraude": "#ef4444"},
-        title="Volume de Transacoes por Hora do Dia",
-        labels={"hour": "Hora do Dia (0-23)", "count": "Numero de Transacoes"},
+        color_discrete_map={"Legítima": "#3b82f6", "Fraude": "#ef4444"},
+        title="Volume de Transações por Hora do Dia",
+        labels={"hour": "Hora do Dia (0-23)", "count": "Número de Transações"},
     )
     fig.update_layout(height=320)
     st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("""
     <div class="info-card">
-    <b>O que o grafico mostra:</b> Transacoes legitimas seguem o ritmo natural do dia —
-    mais durante o comercio, menos de madrugada. Fraudes tendem a ter um padrao diferente,
-    pois fraudadores muitas vezes agem quando o titular do cartao esta dormindo e nao vai
+    <b>O que o gráfico mostra:</b> Transações legítimas seguem o ritmo natural do dia —
+    mais durante o comércio, menos de madrugada. Fraudes tendem a ter um padrão diferente,
+    pois fraudadores muitas vezes agem quando o titular do cartão está dormindo e não vai
     perceber imediatamente.
     </div>
     """, unsafe_allow_html=True)
@@ -470,10 +470,10 @@ elif pagina == "🧠  Como a IA Aprende":
 
     st.markdown("""
     <div class="info-card">
-    <b>Analogia simples:</b><br>
-    Imagine que voce quer ensinar uma crianca a reconhecer cachorros. Voce mostra milhares de fotos:
-    "isso e cachorro", "isso nao e cachorro". Com o tempo, a crianca aprende os padroes — orelhas,
-    focinho, pelo. O Machine Learning funciona da mesma forma, mas com dados numericos.
+    <b>Uma analogia simples:</b><br>
+    Para ensinar uma criança a reconhecer cachorros, você mostra milhares de fotos:
+    "isso é cachorro", "isso não é cachorro". Com o tempo, ela aprende os padrões — orelhas,
+    focinho, pelo. O Machine Learning funciona da mesma forma, mas com dados numéricos.
     </div>
     """, unsafe_allow_html=True)
 
@@ -481,12 +481,12 @@ elif pagina == "🧠  Como a IA Aprende":
     st.markdown("### O Pipeline de Machine Learning")
 
     etapas = [
-        ("1️⃣ Dados Brutos", "284.807 transacoes com 30 variaveis cada", "#3b82f6"),
-        ("2️⃣ Feature Engineering", "Criamos novas variaveis: hora do dia, velocidade de transacoes...", "#8b5cf6"),
-        ("3️⃣ Balanceamento (SMOTE)", "Criamos exemplos sinteticos de fraude para equilibrar os dados", "#f59e0b"),
-        ("4️⃣ Treinamento LightGBM", "O modelo aprende a distinguir fraudes de transacoes legitimas", "#10b981"),
-        ("5️⃣ Calibracao", "Ajustamos as probabilidades para que 70% signifique realmente 70%", "#06b6d4"),
-        ("6️⃣ Avaliacao", "Testamos em dados nunca vistos antes para medir a performance real", "#ef4444"),
+        ("1️⃣ Dados Brutos", "284.807 transações com 30 variáveis cada", "#3b82f6"),
+        ("2️⃣ Feature Engineering", "Criamos novas variáveis: hora do dia, velocidade de transações...", "#8b5cf6"),
+        ("3️⃣ Balanceamento (SMOTE)", "Criamos exemplos sintéticos de fraude para equilibrar os dados", "#f59e0b"),
+        ("4️⃣ Treinamento LightGBM", "O modelo aprende a distinguir fraudes de transações legítimas", "#10b981"),
+        ("5️⃣ Calibração", "Ajustamos as probabilidades para que 70% signifique realmente 70%", "#06b6d4"),
+        ("6️⃣ Avaliação", "Testamos em dados nunca vistos antes para medir a performance real", "#ef4444"),
     ]
 
     cols = st.columns(3)
@@ -508,32 +508,32 @@ elif pagina == "🧠  Como a IA Aprende":
     with col1:
         st.markdown("""
         <div class="info-card">
-        <b>O que e LightGBM?</b><br><br>
-        Imagine um conselho de especialistas. Cada especialista (chamado de "arvore de decisao")
-        analisa a transacao e da um voto. O LightGBM cria centenas dessas arvores e combina
-        todos os votos para chegar a uma decisao final.<br><br>
-        Cada arvore corrige os erros das anteriores — isso e o "Gradient Boosting".
+        <b>O que é o LightGBM?</b><br><br>
+        Pense em um conselho de especialistas. Cada especialista (chamado de "árvore de decisão")
+        analisa a transação e dá um voto. O LightGBM cria centenas dessas árvores e combina
+        todos os votos para chegar a uma decisão final.<br><br>
+        Cada árvore corrige os erros das anteriores — isso é o "Gradient Boosting".
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
         <div class="info-card success">
-        <b>Por que LightGBM e rapido e preciso?</b><br><br>
-        - Processa milhoes de transacoes em segundos<br>
+        <b>Por que o LightGBM é rápido e preciso?</b><br><br>
+        - Processa milhões de transações em segundos<br>
         - Funciona bem com dados desbalanceados<br>
-        - Nao e enganado por valores extremos (outliers)<br>
-        - Produz uma <em>probabilidade</em>, nao apenas sim/nao
+        - Não se deixa enganar por valores extremos (outliers)<br>
+        - Produz uma <em>probabilidade</em>, não apenas sim/não
         </div>
         """, unsafe_allow_html=True)
 
     # Arvore de decisão explicada visualmente
     st.markdown("---")
-    st.markdown("### Como uma Arvore de Decisao Funciona")
+    st.markdown("### Como uma Árvore de Decisão Funciona")
 
     st.markdown("""
     <div class="info-card">
-    Antes do LightGBM combinar centenas de arvores, cada arvore individual funciona como
+    Antes do LightGBM combinar centenas de árvores, cada árvore individual funciona como
     um fluxograma de perguntas. Veja um exemplo simplificado:
     </div>
     """, unsafe_allow_html=True)
@@ -542,28 +542,28 @@ elif pagina == "🧠  Como a IA Aprende":
     st.markdown("""
     <div style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:24px; font-family:monospace; font-size:0.85rem; color:#1e293b'>
     <div style='text-align:center; margin-bottom:16px; font-size:1rem; font-weight:bold; color:#0f172a'>
-        Exemplo de Arvore de Decisao para Fraude
+        Exemplo de Árvore de Decisão para Fraude
     </div>
     <div style='text-align:center'>
         ┌─────────────────────────────┐<br>
-        │ O valor e maior que R$500?  │<br>
+        │ O valor é maior que R$500?  │<br>
         └──────────┬──────────────────┘<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
-        &nbsp;&nbsp;&nbsp;SIM ↙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↘ NAO<br>
+        &nbsp;&nbsp;&nbsp;SIM ↙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↘ NÃO<br>
     ┌───────────────┐&nbsp;&nbsp;&nbsp;┌────────────────────┐<br>
-    │ Eh noturno?   │&nbsp;&nbsp;&nbsp;│ Muitas transacoes  │<br>
-    │ (22h - 6h)    │&nbsp;&nbsp;&nbsp;│ na ultima hora?    │<br>
+    │ É noturno?    │&nbsp;&nbsp;&nbsp;│ Muitas transações  │<br>
+    │ (22h - 6h)    │&nbsp;&nbsp;&nbsp;│ na última hora?    │<br>
     └──────┬────────┘&nbsp;&nbsp;&nbsp;└─────────┬──────────┘<br>
-    SIM↙&nbsp;&nbsp;&nbsp;↘NAO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SIM↙&nbsp;&nbsp;↘NAO<br>
-    &nbsp;&nbsp;FRAUDE  LEGIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FRAUDE&nbsp;&nbsp;LEGIT<br>
+    SIM↙&nbsp;&nbsp;&nbsp;↘NÃO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SIM↙&nbsp;&nbsp;↘NÃO<br>
+    &nbsp;&nbsp;FRAUDE  LEGÍT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FRAUDE&nbsp;&nbsp;LEGÍT<br>
     </div>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
     <div class="info-card warning" style='margin-top:12px'>
-    <b>Importante:</b> Essa e uma simplificacao didatica. O modelo real usa 500 arvores,
-    cada uma com dezenas de nos, analisando 30 variaveis simultaneamente. O resultado e uma
+    <b>Importante:</b> Essa é uma simplificação didática. O modelo real usa 500 árvores,
+    cada uma com dezenas de nós, analisando 30 variáveis simultaneamente. O resultado é uma
     <strong>probabilidade entre 0% e 100%</strong> de ser fraude.
     </div>
     """, unsafe_allow_html=True)
@@ -575,21 +575,21 @@ elif pagina == "🧠  Como a IA Aprende":
     with col1:
         st.markdown("""
         <div class="info-card danger">
-        <b>Problema sem calibracao:</b><br><br>
+        <b>Problema sem calibração:</b><br><br>
         O modelo diz "probabilidade de fraude: 80%".<br>
-        Mas na realidade, dessas transacoes que ele diz 80%, apenas 50% sao fraudes de verdade.<br><br>
-        Isso significa que o modelo e <em>otimista demais</em> — e perigoso para decisoes de negocio.
+        Mas na realidade, dessas transações que ele diz 80%, apenas 50% são fraudes de verdade.<br><br>
+        Isso significa que o modelo é <em>otimista demais</em> — e perigoso para decisões de negócio.
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
         <div class="info-card success">
-        <b>Com calibracao (isotonic regression):</b><br><br>
+        <b>Com calibração (isotonic regression):</b><br><br>
         O modelo diz "probabilidade de fraude: 80%".<br>
-        E de fato, dessas transacoes, 78-82% sao fraudes reais.<br><br>
-        Isso e como um medico que diz "voce tem 70% de chance de recuperar" —
-        e isso deve ser verdade, nao apenas uma estimativa.
+        E de fato, dessas transações, 78-82% são fraudes reais.<br><br>
+        É como um médico que diz "você tem 70% de chance de se recuperar" —
+        esse número precisa ser real, não só uma estimativa.
         </div>
         """, unsafe_allow_html=True)
 
@@ -630,7 +630,7 @@ elif pagina == "📈  Resultados do Modelo":
         <div class="metric-card">
             <div class="label">ROC-AUC</div>
             <div class="value">{metrics['roc_auc']:.4f}</div>
-            <div class="subtext">Poder de discriminacao geral</div>
+            <div class="subtext">Poder de discriminação geral</div>
         </div>
         """, unsafe_allow_html=True)
     with c2:
@@ -638,7 +638,7 @@ elif pagina == "📈  Resultados do Modelo":
         <div class="metric-card">
             <div class="label">PR-AUC</div>
             <div class="value">{metrics['pr_auc']:.4f}</div>
-            <div class="subtext">Metrica principal p/ dados raros</div>
+            <div class="subtext">Métrica principal p/ dados raros</div>
         </div>
         """, unsafe_allow_html=True)
     with c3:
@@ -646,7 +646,7 @@ elif pagina == "📈  Resultados do Modelo":
         <div class="metric-card">
             <div class="label">KS Statistic</div>
             <div class="value">{metrics['ks']:.1f}</div>
-            <div class="subtext">Separacao entre fraudes e legitimas</div>
+            <div class="subtext">Separação entre fraudes e legítimas</div>
         </div>
         """, unsafe_allow_html=True)
     with c4:
@@ -654,16 +654,16 @@ elif pagina == "📈  Resultados do Modelo":
         <div class="metric-card">
             <div class="label">Gini</div>
             <div class="value">{metrics['gini']:.1f}</div>
-            <div class="subtext">Padrao do mercado financeiro</div>
+            <div class="subtext">Padrão do mercado financeiro</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("---")
 
     # Explicações das métricas
-    st.markdown("### O que cada metrica significa?")
+    st.markdown("### O que cada métrica significa?")
 
-    tabs = st.tabs(["ROC-AUC", "PR-AUC", "KS Statistic", "Gini", "Calibracao"])
+    tabs = st.tabs(["ROC-AUC", "PR-AUC", "KS Statistic", "Gini", "Calibração"])
 
     with tabs[0]:
         col1, col2 = st.columns([1, 1])
@@ -671,10 +671,10 @@ elif pagina == "📈  Resultados do Modelo":
             st.markdown(f"""
             <div class="info-card">
             <b>ROC-AUC = {metrics['roc_auc']:.4f}</b><br><br>
-            <b>Em palavras simples:</b> Se eu pegar uma transacao fraudulenta e uma legitima
-            ao acaso, o modelo da uma pontuacao maior para a fraude em {metrics['roc_auc']:.1%} das vezes.<br><br>
-            <b>Analogia:</b> Um medico radiologista que consegue distinguir tumores de tecido
-            normal em 94,9% dos casos ao analizar radiografias.<br><br>
+            <b>Em palavras simples:</b> Se pegarmos uma transação fraudulenta e uma legítima
+            ao acaso, o modelo dá pontuação maior para a fraude em {metrics['roc_auc']:.1%} das vezes.<br><br>
+            <b>Analogia:</b> Um médico radiologista que consegue distinguir tumores de tecido
+            normal em 94,9% dos casos ao analisar radiografias.<br><br>
             <span class="badge badge-green">Excelente (meta: acima de 0.85)</span>
             </div>
             """, unsafe_allow_html=True)
@@ -695,7 +695,7 @@ elif pagina == "📈  Resultados do Modelo":
             fig.update_layout(
                 title="Curva ROC — Quanto mais para o canto superior esquerdo, melhor",
                 xaxis_title="Taxa de Falsos Alarmes",
-                yaxis_title="Taxa de Deteccao de Fraudes",
+                yaxis_title="Taxa de Detecção de Fraudes",
                 height=340, legend=dict(x=0.4, y=0.1)
             )
             st.plotly_chart(fig, use_container_width=True)
@@ -706,11 +706,11 @@ elif pagina == "📈  Resultados do Modelo":
             st.markdown(f"""
             <div class="info-card">
             <b>PR-AUC = {metrics['pr_auc']:.4f}</b><br><br>
-            <b>Por que esta metrica e mais importante para fraude?</b><br><br>
-            Com dados muito desbalanceados (0.17% de fraude), o ROC-AUC pode ser enganoso.
-            A curva Precision-Recall foca especificamente na qualidade das deteccoes
-            de fraude — ignorando os falsos "nao-fraudes".<br><br>
-            <b>Precisao:</b> De tudo que o modelo disse ser fraude, quantos % realmente eram?<br>
+            <b>Por que esta métrica é mais importante para fraude?</b><br><br>
+            Com dados muito desbalanceados (0,17% de fraude), o ROC-AUC pode ser enganoso.
+            A curva Precision-Recall foca especificamente na qualidade das detecções
+            de fraude, ignorando os casos de não-fraude.<br><br>
+            <b>Precisão:</b> Do que o modelo sinalizou como fraude, quantos % realmente eram?<br>
             <b>Recall:</b> De todas as fraudes reais, quantos % o modelo encontrou?<br><br>
             <span class="badge badge-green">Excelente (meta: acima de 0.80)</span>
             </div>
@@ -729,9 +729,9 @@ elif pagina == "📈  Resultados do Modelo":
                 annotation_text=f"Baseline aleatorio ({y_val.mean():.4f})"
             )
             fig.update_layout(
-                title="Curva Precisao-Recall — Quanto mais area, melhor",
+                title="Curva Precisão-Recall — Quanto mais área, melhor",
                 xaxis_title="Recall (% de fraudes detectadas)",
-                yaxis_title="Precisao (% corretos entre alertados)",
+                yaxis_title="Precisão (% corretos entre alertados)",
                 height=340
             )
             st.plotly_chart(fig, use_container_width=True)
@@ -742,16 +742,16 @@ elif pagina == "📈  Resultados do Modelo":
             st.markdown(f"""
             <div class="info-card">
             <b>KS = {metrics['ks']:.1f}</b><br><br>
-            <b>O que e o KS Statistic?</b><br><br>
-            KS mede o quanto o modelo consegue SEPARAR os dois grupos: fraudes e transacoes legitimas.<br><br>
-            Pense em duas pilhas de cartas embaralhadas — vermelhas (fraudes) e azuis (legitimas).
+            <b>O que é o KS Statistic?</b><br><br>
+            O KS mede o quanto o modelo consegue SEPARAR os dois grupos: fraudes e transações legítimas.<br><br>
+            Pense em duas pilhas de cartas embaralhadas — vermelhas (fraudes) e azuis (legítimas).
             O KS mede o quanto o modelo consegue dividi-las em dois grupos limpos.<br><br>
-            <b>Tabela de referencia:</b>
+            <b>Tabela de referência:</b>
             </div>
             <table style='width:100%; border-collapse:collapse; margin-top:8px; font-size:0.85rem'>
             <tr style='background:#1e293b; color:white'><th style='padding:6px'>KS</th><th>Qualidade</th></tr>
             <tr style='background:#fef2f2'><td style='padding:6px'>Abaixo de 20</td><td>Ruim</td></tr>
-            <tr style='background:#fffbeb'><td style='padding:6px'>20 a 40</td><td>Aceitavel</td></tr>
+            <tr style='background:#fffbeb'><td style='padding:6px'>20 a 40</td><td>Aceitável</td></tr>
             <tr style='background:#f0fdf4'><td style='padding:6px'>40 a 50</td><td>Bom</td></tr>
             <tr style='background:#dcfce7'><td style='padding:6px'>50 a 60</td><td>Muito bom</td></tr>
             <tr style='background:#bbf7d0'><td style='padding:6px'>Acima de 60</td><td><b>Excelente</b></td></tr>
@@ -768,14 +768,14 @@ elif pagina == "📈  Resultados do Modelo":
             x_axis = np.linspace(0, 1, len(df_ks))
             fig = go.Figure()
             fig.add_trace(go.Scatter(x=x_axis, y=df_ks["cum_bad"].values,  name="Fraudes", line=dict(color="#ef4444", width=2)))
-            fig.add_trace(go.Scatter(x=x_axis, y=df_ks["cum_good"].values, name="Legitimas", line=dict(color="#3b82f6", width=2)))
+            fig.add_trace(go.Scatter(x=x_axis, y=df_ks["cum_good"].values, name="Legítimas", line=dict(color="#3b82f6", width=2)))
             fig.add_vline(x=df_ks["ks"].idxmax() / len(df_ks) if n_bad > 0 else 0.5,
                           line_dash="dash", line_color="#1e293b",
                           annotation_text=f"KS max = {metrics['ks']:.1f}")
             fig.update_layout(
-                title="Grafico KS — Separacao entre Fraudes e Legitimas",
-                xaxis_title="Populacao ordenada por score (0% a 100%)",
-                yaxis_title="Distribuicao acumulada",
+                title="Gráfico KS — Separação entre Fraudes e Legítimas",
+                xaxis_title="População ordenada por score (0% a 100%)",
+                yaxis_title="Distribuição acumulada",
                 height=360
             )
             st.plotly_chart(fig, use_container_width=True)
@@ -784,11 +784,11 @@ elif pagina == "📈  Resultados do Modelo":
         st.markdown(f"""
         <div class="info-card">
         <b>Gini = {metrics['gini']:.1f} (equivale a ROC-AUC = {metrics['roc_auc']:.4f})</b><br><br>
-        O Gini e o <em>idioma nativo</em> do mercado de credito. Bancos e financeiras usam essa metrica
-        ha decadas para avaliar modelos de risco. A relacao e simples: <strong>Gini = 2 x AUC - 1</strong>.<br><br>
-        Com Gini = {metrics['gini']:.1f}, nosso modelo esta na categoria <b>Excelente</b> para os padroes
+        O Gini é o <em>idioma nativo</em> do mercado de crédito. Bancos e financeiras usam essa métrica
+        há décadas para avaliar modelos de risco. A relação é simples: <strong>Gini = 2 × AUC - 1</strong>.<br><br>
+        Com Gini = {metrics['gini']:.1f}, nosso modelo está na categoria <b>Excelente</b> para os padrões
         do mercado financeiro (meta: Gini > 50).<br><br>
-        <b>Por que bancos usam Gini e nao AUC?</b> Tradição histórica — e o que os reguladores
+        <b>Por que bancos usam Gini e não AUC?</b> Tradição histórica — é o que os reguladores
         e times de risco reconhecem e sabem interpretar.
         </div>
         """, unsafe_allow_html=True)
@@ -799,14 +799,14 @@ elif pagina == "📈  Resultados do Modelo":
             st.markdown(f"""
             <div class="info-card">
             <b>Brier Score = {metrics['brier']:.4f}</b><br><br>
-            <b>O que e calibracao?</b><br><br>
-            Quando o modelo diz "essa transacao tem 70% de chance de ser fraude",
-            isso deve ser verdade. Se na pratica apenas 30% dessas transacoes sao fraudes,
-            o modelo esta <em>mal calibrado</em>.<br><br>
-            O Brier Score mede a qualidade da calibracao:
+            <b>O que é calibração?</b><br><br>
+            Quando o modelo diz "essa transação tem 70% de chance de ser fraude",
+            isso precisa ser verdade. Se na prática apenas 30% dessas transações são fraudes,
+            o modelo está <em>mal calibrado</em>.<br><br>
+            O Brier Score mede a qualidade da calibração:
             <ul>
             <li>Abaixo de 0.10 → Bem calibrado</li>
-            <li>0.10 a 0.20 → Calibracao moderada</li>
+            <li>0.10 a 0.20 → Calibração moderada</li>
             <li>Acima de 0.20 → Mal calibrado</li>
             </ul>
             <span class="badge badge-green">Nosso modelo: {metrics['brier']:.4f} — Bem calibrado</span>
@@ -818,7 +818,7 @@ elif pagina == "📈  Resultados do Modelo":
             fig.add_trace(go.Scatter(
                 x=[0, 1], y=[0, 1], mode="lines",
                 line=dict(color="#94a3b8", dash="dash", width=1.5),
-                name="Calibracao perfeita"
+                name="Calibração perfeita"
             ))
             fig.add_trace(go.Scatter(
                 x=mpv, y=fop, mode="lines+markers",
@@ -827,16 +827,16 @@ elif pagina == "📈  Resultados do Modelo":
                 name=f"Nosso modelo (Brier={metrics['brier']:.4f})"
             ))
             fig.update_layout(
-                title="Grafico de Calibracao — Quanto mais proximo da linha tracejada, melhor",
+                title="Gráfico de Calibração — Quanto mais próximo da linha tracejada, melhor",
                 xaxis_title="Probabilidade prevista pelo modelo",
-                yaxis_title="Frequencia real observada",
+                yaxis_title="Frequência real observada",
                 height=340
             )
             st.plotly_chart(fig, use_container_width=True)
 
     # Matriz de Confusão
     st.markdown("---")
-    st.markdown("### A Matrix de Confusao: Acertos e Erros do Modelo")
+    st.markdown("### A Matriz de Confusão: Acertos e Erros do Modelo")
 
     threshold = metrics["best_threshold"]
     y_pred = (y_pred_proba >= threshold).astype(int)
@@ -847,12 +847,12 @@ elif pagina == "📈  Resultados do Modelo":
     with col1:
         fig = px.imshow(
             cm, text_auto=True,
-            labels=dict(x="Previsao do Modelo", y="Realidade", color="Quantidade"),
-            x=["Previsto: Legitima", "Previsto: Fraude"],
-            y=["Real: Legitima", "Real: Fraude"],
+            labels=dict(x="Previsão do Modelo", y="Realidade", color="Quantidade"),
+            x=["Previsto: Legítima", "Previsto: Fraude"],
+            y=["Real: Legítima", "Real: Fraude"],
             color_continuous_scale=[[0, "#dbeafe"], [1, "#1e40af"]],
         )
-        fig.update_layout(title=f"Matriz de Confusao (threshold={threshold:.3f})", height=340)
+        fig.update_layout(title=f"Matriz de Confusão (threshold={threshold:.3f})", height=340)
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
@@ -863,34 +863,34 @@ elif pagina == "📈  Resultados do Modelo":
         </div>
         <div class="info-card">
         <b>Verdadeiros Negativos (TN): {tn:,}</b><br>
-        Transacoes legitimas que o modelo CORRETAMENTE deixou passar.
+        Transações legítimas que o modelo CORRETAMENTE deixou passar.
         </div>
         <div class="info-card warning">
         <b>Falsos Positivos (FP): {fp:,}</b><br>
-        Transacoes legitimas bloqueadas por engano. "Falso alarme" —
-        incomoda o cliente, mas nao causa perda financeira direta.
+        Transações legítimas bloqueadas por engano. "Falso alarme" —
+        incomoda o cliente, mas não causa perda financeira direta.
         </div>
         <div class="info-card danger">
         <b>Falsos Negativos (FN): {fn:,}</b><br>
-        Fraudes NAO detectadas. O pior caso — e o que queremos minimizar!
+        Fraudes NÃO detectadas. O pior caso — é o que queremos minimizar!
         Um fraudador passou pelo sistema sem ser bloqueado.
         </div>
         """, unsafe_allow_html=True)
 
     # Distribuição de scores
     st.markdown("---")
-    st.markdown("### Distribuicao dos Scores de Probabilidade")
+    st.markdown("### Distribuição dos Scores de Probabilidade")
     st.markdown("""
     <div class="info-card">
-    Este grafico mostra como o modelo distribui as probabilidades.
-    Um bom modelo separa bem os dois grupos: a maioria das transacoes legitimas
-    deve ter score proximo de 0, e as fraudes score proximo de 1.
+    Este gráfico mostra como o modelo distribui as probabilidades.
+    Um bom modelo separa bem os dois grupos: a maioria das transações legítimas
+    deve ter score próximo de 0, e as fraudes score próximo de 1.
     </div>
     """, unsafe_allow_html=True)
 
     fig = go.Figure()
     fig.add_trace(go.Histogram(
-        x=y_pred_proba[y_val == 0], name="Legitima", nbinsx=80,
+        x=y_pred_proba[y_val == 0], name="Legítima", nbinsx=80,
         marker_color="#3b82f6", opacity=0.65, histnorm="probability density"
     ))
     fig.add_trace(go.Histogram(
@@ -901,7 +901,7 @@ elif pagina == "📈  Resultados do Modelo":
                   annotation_text=f"Threshold ({threshold:.3f})", annotation_position="top right")
     fig.update_layout(
         barmode="overlay", height=340,
-        title="Separacao dos Scores — Quanto menos sobreposicao, melhor o modelo",
+        title="Separação dos Scores — Quanto menos sobreposição, melhor o modelo",
         xaxis_title="Score de Probabilidade de Fraude (0 a 1)",
         yaxis_title="Densidade"
     )
@@ -913,17 +913,17 @@ elif pagina == "📈  Resultados do Modelo":
 # ═══════════════════════════════════════════════════════════════════════════════
 elif pagina == "🔍  Por que a IA Decidiu Assim?":
     st.markdown("## 🔍 Por que a IA Decidiu Assim?")
-    st.markdown("*Transparencia: entenda os fatores que influenciam cada decisao*")
+    st.markdown("*Transparência: entenda os fatores que influenciam cada decisão*")
 
     st.markdown("""
     <div class="info-card">
     <b>O problema da "caixa preta":</b><br><br>
-    Modelos de Machine Learning complexos podem ser dificeis de entender — eles chegam a
-    uma resposta, mas nao explicam o motivo. Isso e chamado de "caixa preta".<br><br>
-    Em decisoes financeiras (bloqueio de cartao, negativa de credito), a lei (LGPD e regulacoes
-    do Banco Central) exige que as decisoes possam ser explicadas ao cliente.<br><br>
-    Para isso usamos <strong>SHAP</strong> — uma tecnica matematica que calcula a contribuicao
-    de cada variavel para a decisao final.
+    Modelos de Machine Learning complexos podem ser difíceis de entender — eles chegam a
+    uma resposta, mas não explicam o motivo. Isso é o que chamamos de "caixa preta".<br><br>
+    Em decisões financeiras (bloqueio de cartão, negativa de crédito), a lei (LGPD e regulações
+    do Banco Central) exige que as decisões possam ser explicadas ao cliente.<br><br>
+    Para isso usamos <strong>SHAP</strong> — uma técnica matemática que calcula a contribuição
+    de cada variável para a decisão final.
     </div>
     """, unsafe_allow_html=True)
 
@@ -936,14 +936,14 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
 
     # Importância das features via coeficientes do modelo
     st.markdown("---")
-    st.markdown("### Quais Variaveis o Modelo Mais Usa?")
+    st.markdown("### Quais Variáveis o Modelo Mais Usa?")
 
     st.markdown("""
     <div class="info-card warning">
-    <b>Como ler este grafico:</b><br>
-    Barras maiores = a variavel tem mais influencia nas decisoes do modelo.
-    Nao significa que a variavel causa fraude — significa que ela e um bom <em>sinal</em>
-    para distinguir fraudes de transacoes legitimas.
+    <b>Como ler este gráfico:</b><br>
+    Barras maiores = a variável tem mais influência nas decisões do modelo.
+    Isso não significa que a variável causa fraude — ela é um bom <em>sinal</em>
+    para distinguir fraudes de transações legítimas.
     </div>
     """, unsafe_allow_html=True)
 
@@ -955,14 +955,14 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
         importances = base_model.feature_importances_
         fi_df = pd.DataFrame({
             "Feature": feature_names[:len(importances)],
-            "Importancia": importances
-        }).sort_values("Importancia", ascending=False).head(20)
+            "Importância": importances
+        }).sort_values("Importância", ascending=False).head(20)
 
         fig = px.bar(
-            fi_df, x="Importancia", y="Feature", orientation="h",
-            color="Importancia",
+            fi_df, x="Importância", y="Feature", orientation="h",
+            color="Importância",
             color_continuous_scale=[[0, "#dbeafe"], [0.5, "#3b82f6"], [1, "#1e40af"]],
-            title="Top 20 Variaveis Mais Importantes para o Modelo",
+            title="Top 20 Variáveis Mais Importantes para o Modelo",
         )
         fig.update_layout(height=520, yaxis=dict(autorange="reversed"),
                           coloraxis_showscale=False)
@@ -970,28 +970,28 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
 
         st.markdown("""
         <div class="info-card">
-        <b>Por que as variaveis V1-V28 aparecem com nomes genericos?</b><br><br>
-        Por questoes de privacidade, as variaveis originais do dataset foram transformadas
-        usando uma tecnica chamada PCA (Analise de Componentes Principais). Cada V1, V2...
-        representa uma combinacao matematica de caracteristicas reais da transacao, como:
-        localizacao, historico do cliente, comportamento de compra, tipo de comerciante, etc.
+        <b>Por que as variáveis V1-V28 aparecem com nomes genéricos?</b><br><br>
+        Por questões de privacidade, as variáveis originais do dataset foram transformadas
+        usando uma técnica chamada PCA (Análise de Componentes Principais). Cada V1, V2...
+        representa uma combinação matemática de características reais da transação, como:
+        localização, histórico do cliente, comportamento de compra, tipo de comerciante, etc.
         </div>
         """, unsafe_allow_html=True)
 
     except Exception as e:
-        st.warning(f"Feature importances nao disponiveis para este tipo de modelo: {e}")
+        st.warning(f"Feature importances não disponíveis para este tipo de modelo: {e}")
 
     # Explicação local por transação
     st.markdown("---")
-    st.markdown("### Como Explicar uma Transacao Especifica?")
+    st.markdown("### Como Explicar uma Transação Específica?")
 
     st.markdown("""
     <div class="info-card">
-    <b>Logica SHAP simplificada:</b><br><br>
-    Imagine que o modelo diz que uma transacao tem 85% de chance de fraude.
-    O SHAP responde: "Ok, mas por que 85%? Qual parte do 85% veio do valor alto?
-    Qual parte veio do horario de madrugada? Qual parte veio da localizacao incomum?"<br><br>
-    Cada variavel recebe um <em>valor SHAP</em>:
+    <b>Lógica SHAP simplificada:</b><br><br>
+    O modelo diz que uma transação tem 85% de chance de fraude.
+    O SHAP responde: "Ok, mas por que 85%? Quanto veio do valor alto?
+    Quanto veio do horário de madrugada? Quanto veio da localização incomum?"<br><br>
+    Cada variável recebe um <em>valor SHAP</em>:
     <ul>
     <li><b style='color:#ef4444'>Positivo (+):</b> Esta variavel AUMENTOU a probabilidade de ser fraude</li>
     <li><b style='color:#10b981'>Negativo (-):</b> Esta variavel DIMINUIU a probabilidade de ser fraude</li>
@@ -1005,18 +1005,18 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**Transacao com ALTA probabilidade de fraude:**")
+        st.markdown("**Transação com ALTA probabilidade de fraude:**")
         high_risk_idx = idx_fraud[np.argmax(y_pred_proba[idx_fraud])]
         prob_high = y_pred_proba[high_risk_idx]
 
         top_features_high = pd.DataFrame({
-            "Variavel": feature_names[:len(X_val[high_risk_idx])],
+            "Variável": feature_names[:len(X_val[high_risk_idx])],
             "Valor": X_val[high_risk_idx],
         }).head(15)
 
         fig = px.bar(
             top_features_high.sort_values("Valor", key=abs, ascending=False).head(10),
-            x="Valor", y="Variavel", orientation="h",
+            x="Valor", y="Variável", orientation="h",
             color="Valor",
             color_continuous_scale=[[0, "#dcfce7"], [0.5, "#fef3c7"], [1, "#fee2e2"]],
             title=f"Valores das features (Prob. Fraude: {prob_high:.1%})"
@@ -1026,18 +1026,18 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        st.markdown("**Transacao com BAIXA probabilidade de fraude:**")
+        st.markdown("**Transação com BAIXA probabilidade de fraude:**")
         low_risk_idx = idx_legit[np.argmin(y_pred_proba[idx_legit])]
         prob_low = y_pred_proba[low_risk_idx]
 
         top_features_low = pd.DataFrame({
-            "Variavel": feature_names[:len(X_val[low_risk_idx])],
+            "Variável": feature_names[:len(X_val[low_risk_idx])],
             "Valor": X_val[low_risk_idx],
         }).head(15)
 
         fig = px.bar(
             top_features_low.sort_values("Valor", key=abs, ascending=False).head(10),
-            x="Valor", y="Variavel", orientation="h",
+            x="Valor", y="Variável", orientation="h",
             color="Valor",
             color_continuous_scale=[[0, "#dbeafe"], [0.5, "#a5f3fc"], [1, "#dcfce7"]],
             title=f"Valores das features (Prob. Fraude: {prob_low:.1%})"
@@ -1048,11 +1048,11 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
 
     st.markdown("""
     <div class="info-card success">
-    <b>Na pratica, o que o banco faz com essa informacao?</b><br><br>
-    Quando o sistema bloqueia um cartao, o SHAP permite ao atendente dizer ao cliente:
-    <em>"Sua transacao foi bloqueada porque: (1) o valor foi 5x maior que sua media,
-    (2) ocorreu de madrugada, e (3) em um comerciante que voce nunca usou antes."</em><br><br>
-    Isso e muito melhor do que apenas dizer "o sistema recusou" sem explicacao.
+    <b>Na prática, o que o banco faz com essa informação?</b><br><br>
+    Quando o sistema bloqueia um cartão, o SHAP permite ao atendente dizer ao cliente:
+    <em>"Sua transação foi bloqueada porque: (1) o valor foi 5x maior que sua média,
+    (2) ocorreu de madrugada, e (3) em um comerciante que você nunca usou antes."</em><br><br>
+    Isso é muito melhor do que apenas dizer "o sistema recusou" sem nenhuma explicação.
     </div>
     """, unsafe_allow_html=True)
 
@@ -1062,16 +1062,16 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
 # ═══════════════════════════════════════════════════════════════════════════════
 elif pagina == "🎮  Simulador de Transação":
     st.markdown("## 🎮 Simulador de Transação")
-    st.markdown("*Teste voce mesmo: insira os dados de uma transacao e veja o que o modelo diz*")
+    st.markdown("*Teste você mesmo: insira os dados de uma transação e veja o que o modelo diz*")
 
     st.markdown("""
     <div class="info-card warning">
     <b>Como usar este simulador:</b><br><br>
-    Este simulador usa o modelo real treinado nos dados do projeto. Voce pode ajustar
-    os controles abaixo para simular diferentes cenarios de transacao. O modelo vai
+    Este simulador usa o modelo real treinado nos dados do projeto. Você pode ajustar
+    os controles abaixo para simular diferentes cenários de transação. O modelo vai
     calcular a probabilidade de fraude em tempo real.<br><br>
-    <b>Lembre-se:</b> as variaveis V1-V28 sao anonimizadas — aqui usamos os percentis
-    do dataset para dar a voce controle intuitivo sobre "transacao suspeita" vs "transacao normal".
+    <b>Lembre-se:</b> as variáveis V1-V28 são anonimizadas — aqui usamos os percentis
+    do dataset para dar a você controle intuitivo sobre "transação suspeita" vs "transação normal".
     </div>
     """, unsafe_allow_html=True)
 
@@ -1084,53 +1084,53 @@ elif pagina == "🎮  Simulador de Transação":
 
     # Controles do simulador
     st.markdown("---")
-    st.markdown("### Configure a Transacao")
+    st.markdown("### Configure a Transação")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown("**Informacoes da Transacao**")
+        st.markdown("**Informações da Transação**")
         amount = st.slider(
-            "Valor da transacao (R$)",
+            "Valor da transação (R$)",
             min_value=0.0, max_value=5000.0, value=50.0, step=10.0,
             help="Valor em reais da compra"
         )
         hour = st.slider(
             "Hora do dia (0=meia-noite, 12=meio-dia)",
             min_value=0, max_value=23, value=14,
-            help="Hora em que a transacao ocorreu"
+            help="Hora em que a transação ocorreu"
         )
         is_night = 1 if (hour < 6 or hour >= 22) else 0
         is_weekend = st.checkbox("Fim de semana?", value=False)
 
         st.markdown(f"""
         <div class="info-card {'danger' if is_night else 'success'}" style='margin-top:8px; padding:10px'>
-        {'🌙 Horario noturno (suspeito)' if is_night else '☀️ Horario comercial (normal)'}
+        {'🌙 Horário noturno (suspeito)' if is_night else '☀️ Horário comercial (normal)'}
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("**Perfil de Comportamento**")
         scenario = st.radio(
-            "Escolha um cenario predefinido:",
-            ["Normal (compra rotineira)", "Suspeito (valor alto fora do padrao)", "Muito suspeito (multiplas caracteristicas)"],
-            help="Cenarios que facilitam o teste"
+            "Escolha um cenário predefinido:",
+            ["Normal (compra rotineira)", "Suspeito (valor alto fora do padrão)", "Muito suspeito (múltiplas características)"],
+            help="Cenários que facilitam o teste"
         )
         st.markdown("""
         <small style='color:#64748b'>Ou ajuste os controles e clique em 'Avaliar'</small>
         """, unsafe_allow_html=True)
 
     with col3:
-        st.markdown("**Historico do Cartao**")
+        st.markdown("**Histórico do Cartão**")
         tx_count = st.slider(
-            "Transacoes na ultima hora",
+            "Transações na última hora",
             min_value=0, max_value=20, value=1,
-            help="Quantas transacoes este cartao fez na ultima hora"
+            help="Quantas transações este cartão fez na última hora"
         )
         amount_ratio = st.slider(
-            "Valor atual vs. media historica",
+            "Valor atual vs. média histórica",
             min_value=0.1, max_value=10.0, value=1.0, step=0.1,
-            help="1.0 = igual a media; 5.0 = 5x acima da media"
+            help="1.0 = igual à média; 5.0 = 5x acima da média"
         )
 
     # Montar vetor de features
@@ -1140,7 +1140,7 @@ elif pagina == "🎮  Simulador de Transação":
         # Pegar uma transação base do dataset e modificar
         if scenario == "Normal (compra rotineira)":
             base_idx = np.where(y_val == 0)[0][42]
-        elif scenario == "Suspeito (valor alto fora do padrao)":
+        elif scenario == "Suspeito (valor alto fora do padrão)":
             base_idx = np.where((y_pred_proba_val > 0.3) & (y_val == 1))[0]
             base_idx = base_idx[0] if len(base_idx) > 0 else np.where(y_val == 1)[0][0]
         else:
@@ -1170,19 +1170,19 @@ elif pagina == "🎮  Simulador de Transação":
             cor = "#ef4444"
             classe = "result-high"
             emoji = "🚨"
-            acao = "BLOQUEAR a transacao e alertar o titular do cartao imediatamente."
+            acao = "BLOQUEAR a transação e alertar o titular do cartão imediatamente."
         elif prob_adjusted >= 0.3:
-            nivel = "RISCO MEDIO"
+            nivel = "RISCO MÉDIO"
             cor = "#f59e0b"
             classe = "result-medium"
             emoji = "⚠️"
-            acao = "Solicitar autenticacao adicional (ex: SMS, biometria) antes de autorizar."
+            acao = "Solicitar autenticação adicional (ex: SMS, biometria) antes de autorizar."
         else:
             nivel = "BAIXO RISCO"
             cor = "#10b981"
             classe = "result-low"
             emoji = "✅"
-            acao = "AUTORIZAR a transacao normalmente."
+            acao = "AUTORIZAR a transação normalmente."
 
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -1194,7 +1194,7 @@ elif pagina == "🎮  Simulador de Transação":
                 <div style='font-size:0.9rem; color:#374151'>probabilidade de fraude</div>
                 <hr style='margin:16px 0; border-color:{cor}44'>
                 <div style='font-size:0.95rem; color:#1e293b'>
-                    <b>Acao recomendada:</b><br>{acao}
+                    <b>Ação recomendada:</b><br>{acao}
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -1207,24 +1207,24 @@ elif pagina == "🎮  Simulador de Transação":
         if amount > 1000:
             fatores.append(("Valor muito alto (R$ {:.0f})".format(amount), "+", "#ef4444", "Aumenta suspeita"))
         elif amount < 20:
-            fatores.append(("Valor baixo (R$ {:.0f}) — pode ser teste do cartao".format(amount), "+", "#f59e0b", "Levemente suspeito"))
+            fatores.append(("Valor baixo (R$ {:.0f}) — pode ser teste do cartão".format(amount), "+", "#f59e0b", "Levemente suspeito"))
         else:
             fatores.append(("Valor dentro da faixa normal (R$ {:.0f})".format(amount), "-", "#10b981", "Reduz suspeita"))
 
         if is_night:
-            fatores.append(("Horario noturno ({}h)".format(hour), "+", "#ef4444", "Aumenta suspeita"))
+            fatores.append(("Horário noturno ({}h)".format(hour), "+", "#ef4444", "Aumenta suspeita"))
         else:
-            fatores.append(("Horario comercial ({}h)".format(hour), "-", "#10b981", "Reduz suspeita"))
+            fatores.append(("Horário comercial ({}h)".format(hour), "-", "#10b981", "Reduz suspeita"))
 
         if tx_count > 5:
-            fatores.append((f"Muitas transacoes recentes ({tx_count} na ultima hora)", "+", "#ef4444", "Aumenta muito a suspeita"))
+            fatores.append((f"Muitas transações recentes ({tx_count} na última hora)", "+", "#ef4444", "Aumenta muito a suspeita"))
         else:
-            fatores.append((f"Poucas transacoes recentes ({tx_count} na ultima hora)", "-", "#10b981", "Comportamento normal"))
+            fatores.append((f"Poucas transações recentes ({tx_count} na última hora)", "-", "#10b981", "Comportamento normal"))
 
         if amount_ratio > 3:
-            fatores.append((f"Valor {amount_ratio:.1f}x acima da media historica", "+", "#ef4444", "Aumenta suspeita"))
+            fatores.append((f"Valor {amount_ratio:.1f}x acima da média histórica", "+", "#ef4444", "Aumenta suspeita"))
         else:
-            fatores.append((f"Valor proximo da media historica ({amount_ratio:.1f}x)", "-", "#10b981", "Comportamento normal"))
+            fatores.append((f"Valor próximo da média histórica ({amount_ratio:.1f}x)", "-", "#10b981", "Comportamento normal"))
 
         for fator, direcao, cor, desc in fatores:
             sinal = "▲ Aumenta fraude" if direcao == "+" else "▼ Reduz fraude"
@@ -1241,15 +1241,15 @@ elif pagina == "🎮  Simulador de Transação":
         st.markdown("""
         <div class="info-card" style='margin-top:16px'>
         <b>Importante entender:</b><br><br>
-        Este e um modelo estatistico. Ele nao tem 100% de certeza — ele calcula probabilidades.
-        Em producao real, a decisao final combina:<br>
+        Este é um modelo estatístico. Ele não tem 100% de certeza — calcula probabilidades.
+        Em produção real, a decisão final combina:<br>
         <ul>
         <li>A probabilidade calculada pelo modelo</li>
-        <li>O historico de relacionamento com o cliente</li>
-        <li>Regras de negocio do banco</li>
-        <li>Confirmacao do proprio cliente (via app)</li>
+        <li>O histórico de relacionamento com o cliente</li>
+        <li>Regras de negócio do banco</li>
+        <li>Confirmação do próprio cliente (via app)</li>
         </ul>
-        Um "falso alarme" (bloquear transacao legitima) e resolvido em segundos via app.
-        Uma fraude nao detectada pode custar centenas de reais.
+        Um "falso alarme" (bloquear transação legítima) se resolve em segundos via app.
+        Uma fraude não detectada pode custar centenas de reais.
         </div>
         """, unsafe_allow_html=True)
