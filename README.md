@@ -13,6 +13,77 @@
 
 ---
 
+## Por que este projeto existe
+
+Toda vez que você passa o cartão, um sistema decide em menos de 300ms se aquela compra é legítima ou fraude. Esse sistema precisa ser preciso o suficiente para não bloquear sua compra no supermercado, mas sensível o suficiente para pegar o fraudador que clonout seu cartão às 3h da manhã.
+
+Este projeto constrói exatamente esse sistema — do zero, com dados reais, seguindo as práticas usadas por bancos e fintechs brasileiras.
+
+O objetivo não é só ter um modelo com métricas altas. É mostrar todo o raciocínio por trás: por que essas métricas, por que esse threshold, como explicar a decisão ao cliente, o que fazer quando o modelo erra.
+
+---
+
+## Quem usa sistemas como este
+
+| Setor | Aplicação |
+|---|---|
+| Bancos (Itaú, Bradesco, C6, Nubank) | Aprovação de transações em tempo real |
+| Adquirentes (Cielo, Stone, Rede) | Antifraude no processamento de pagamentos |
+| Bureaus de crédito (Serasa, Boa Vista) | Score de risco para concessão de crédito |
+| Seguradoras | Detecção de fraude em sinistros |
+| E-commerce (Mercado Livre, Americanas) | Validação de pedidos antes do envio |
+
+---
+
+## O que o modelo decide na prática
+
+O modelo não diz "fraude" ou "não fraude". Ele diz uma **probabilidade** — e o banco define o que fazer com ela:
+
+| Score do modelo | Ação típica |
+|---|---|
+| Abaixo de 10% | Autoriza automaticamente |
+| 10% a 30% | Monitora, registra para análise posterior |
+| 30% a 70% | Solicita autenticação adicional (SMS, biometria) |
+| Acima de 70% | Bloqueia e notifica o titular imediatamente |
+
+Esses limites são ajustáveis. Um banco com clientes mais conservadores pode baixar o threshold. Uma fintech digital pode aceitar mais risco para não frustrar o usuário.
+
+---
+
+## Situações reais que este modelo detecta
+
+**Teste de cartão roubado**
+O fraudador faz uma compra de R$1,99 num app de streaming para ver se o cartão ainda funciona. Valores muito baixos, fora do padrão histórico do cliente, em horário incomum — esse padrão tem nome no mercado: *card testing*.
+
+**Compra após vazamento de dados**
+Dados de cartão são vazados e vendidos em lotes. O fraudador compra e testa muitos cartões em sequência. O modelo detecta pela velocidade: muitas transações no mesmo comerciante, em intervalo de minutos.
+
+**Clonagem física**
+O cartão é clonado num posto de gasolina. Horas depois, aparecem compras em outro estado ou país. O modelo compara localização, horário e valor com o histórico do cliente.
+
+**Fraude de identidade (account takeover)**
+Alguém acessa a conta do cliente e muda o endereço de entrega antes de fazer compras grandes. O modelo detecta pelo comportamento anômalo: primeiro acesso de IP diferente, depois compra de alto valor, tudo numa janela de minutos.
+
+**Fraude amiga (friendly fraud)**
+O próprio titular faz uma compra legítima e depois alega fraude para estornar. Mais difícil de detectar — exige análise comportamental histórica, não só a transação isolada.
+
+---
+
+## Por que o desbalanceamento é o verdadeiro problema
+
+Em 284.807 transações, apenas 492 são fraudes. Isso parece bom até você perceber o que significa para um modelo de ML:
+
+Se o modelo aprender a dizer "tudo é legítimo" para toda transação, ele acerta **99,83% das vezes**. Mas detecta **zero fraudes**.
+
+Esse é o problema central. Resolver isso exige:
+- Métricas certas (PR-AUC, KS, Gini — não acurácia)
+- Balanceamento na hora do treinamento (SMOTE)
+- Threshold ajustado pelo custo do erro, não por F1 genérico
+
+O custo de uma fraude não detectada (R$100 em média) é 20x maior que o custo de um falso alarme (R$5 de operacional + atrito com o cliente). O modelo foi calibrado com essa assimetria em mente.
+
+---
+
 ## Resultado do Modelo
 
 | Métrica | Valor | Benchmark |
@@ -235,6 +306,22 @@ Acesse o dashboard interativo e explore os resultados do modelo em tempo real:
 
 ---
 
+## Relevância para o Mercado Financeiro
+
+Este projeto cobre os pontos que times de dados de bancos e fintechs brasileiras cobram em entrevistas:
+
+**Métricas de risco de crédito** — KS Statistic e Gini são os indicadores padrão do mercado. ROC-AUC é o que a academia usa; KS é o que o gerente de risco entende. Saber a diferença importa.
+
+**Calibração de probabilidade** — Bancos não querem apenas "fraude ou não". Querem saber *quanto* de risco. Uma probabilidade bem calibrada permite precificação, definição de limite e segmentação de clientes por faixa de risco.
+
+**Explicabilidade (LGPD e BACEN)** — A Resolução 4.557 do Banco Central e a LGPD exigem que decisões automatizadas possam ser explicadas. SHAP resolve isso: o sistema consegue dizer ao cliente por que a transação foi bloqueada.
+
+**Custo assimétrico de erro** — Em problemas reais, os dois tipos de erro não custam igual. FN (fraude não detectada) e FP (falso alarme) têm custos diferentes. O threshold do modelo foi otimizado com essa lógica, não pelo F1 genérico.
+
+**Drift e monitoramento (PSI)** — Modelos degradam. O PSI (Population Stability Index) detecta quando a distribuição dos dados mudou o suficiente para exigir retreinamento. PSI = 0.0000 indica estabilidade total no dataset avaliado.
+
+---
+
 ## Autor
 
 **Cláudio Ferreira Neves**
@@ -246,3 +333,7 @@ Especialista em Business Intelligence, Big Data e Analytics
 ---
 
 *Projeto desenvolvido para portfólio profissional — mercado financeiro brasileiro.*
+
+---
+
+📄 **[Casos de Uso detalhados → CASOS_DE_USO.md](CASOS_DE_USO.md)**
