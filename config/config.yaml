@@ -1,0 +1,57 @@
+project:
+  name: "credit_fraud_ml"
+  version: "1.0.0"
+
+data:
+  kaggle_datasets:
+    fraud: "mlg-ulb/creditcardfraud"
+    ieee: "ieee-fraud-detection"
+    credit_scoring: "brycecf/give-me-some-credit-dataset"
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  target_column: "Class"
+  test_size: 0.2
+  random_state: 42
+
+features:
+  temporal_windows: [1, 6, 24, 168]  # horas
+  drop_columns: []
+  scale_method: "standard"  # standard, robust, minmax
+
+imbalance:
+  strategy: "smote"       # smote, smote_enn, adasyn, class_weight
+  sampling_ratio: 0.1     # proporção desejada da classe minoritária
+
+models:
+  base_learners:
+    - name: "lightgbm"
+      params:
+        n_estimators: 500
+        learning_rate: 0.05
+        num_leaves: 63
+        class_weight: "balanced"
+    - name: "xgboost"
+      params:
+        n_estimators: 500
+        learning_rate: 0.05
+        max_depth: 6
+        scale_pos_weight: 100
+    - name: "random_forest"
+      params:
+        n_estimators: 300
+        max_depth: 10
+        class_weight: "balanced"
+  meta_learner: "logistic_regression"
+  cv_folds: 5
+
+evaluation:
+  primary_metric: "pr_auc"
+  threshold_strategy: "f1"  # f1, precision, recall, business_cost
+  business_cost:
+    fn_cost: 100   # custo de não detectar fraude (R$)
+    fp_cost: 5     # custo de falso alarme (R$)
+
+explainability:
+  shap_sample_size: 1000
+  generate_html_report: true
+  output_path: "reports"

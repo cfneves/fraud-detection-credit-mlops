@@ -1,0 +1,110 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+.installed.cfg
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+
+# ─── Ambientes virtuais ────────────────────────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ─── Jupyter Notebooks ────────────────────────────────────────────────────────
+.ipynb_checkpoints
+*.ipynb
+
+# ─── Dados (nunca versionar dados brutos) ─────────────────────────────────────
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.feather
+*.pkl
+*.h5
+*.hdf5
+*.db
+*.sqlite
+
+# ─── Modelos treinados ────────────────────────────────────────────────────────
+models/saved/
+*.joblib
+*.pickle
+
+# ─── Relatórios e figuras geradas ─────────────────────────────────────────────
+reports/figures/
+reports/*.html
+*.png
+*.jpg
+*.jpeg
+
+# ─── Credenciais e segredos ───────────────────────────────────────────────────
+kaggle.json
+.env
+*.key
+secrets.yaml
+credentials.json
+*_credentials.*
+*.pem
+*.p12
+
+# ─── IDEs e editores ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Claude Code ──────────────────────────────────────────────────────────────
+.claude/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+*.out
+
+# ─── Cache e temporários ──────────────────────────────────────────────────────
+.cache/
+.temp/
+tmp/
+*.tmp
+*.bak
+*.orig
+
+# ─── MLflow / Optuna / W&B ────────────────────────────────────────────────────
+mlruns/
+mlartifacts/
+optuna.db
+wandb/
+
+# ─── Streamlit ────────────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ─── Sistema operacional ──────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
