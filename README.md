@@ -2,12 +2,14 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![LightGBM](https://img.shields.io/badge/LightGBM-4.0+-green)](https://lightgbm.readthedocs.io)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.35+-red?logo=streamlit)](https://streamlit.io)
+[![Streamlit App](https://img.shields.io/badge/Demo%20Live-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://fraud-detection-credit-mlops-cfn.streamlit.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-orange)]()
+[![Status](https://img.shields.io/badge/Status-Em%20Produção-brightgreen)]()
 
 > Pipeline de Machine Learning de nível produção para detecção de fraude em cartões de crédito.
 > Projeto de portfólio focado no mercado financeiro brasileiro.
+>
+> 🚀 **[Acesse o Dashboard Interativo](https://fraud-detection-credit-mlops-cfn.streamlit.app)**
 
 ---
 
@@ -191,7 +193,7 @@ O dashboard foi desenvolvido com foco em **usabilidade para usuários não técn
 - [ ] Otimização Optuna (50 trials, PR-AUC)
 - [ ] Autoencoder para detecção de anomalias não-supervisionada
 - [ ] Monitoramento de drift com Evidently
-- [ ] Deploy no Streamlit Cloud
+- [x] Deploy no Streamlit Cloud — [fraud-detection-credit-mlops-cfn.streamlit.app](https://fraud-detection-credit-mlops-cfn.streamlit.app)
 
 ---
 
@@ -208,10 +210,22 @@ O dashboard foi desenvolvido com foco em **usabilidade para usuários não técn
 
 ---
 
+## Demo ao Vivo
+
+[![Streamlit App](https://img.shields.io/badge/Demo-Streamlit_Cloud-FF4B4B?logo=streamlit&logoColor=white&style=for-the-badge)](https://fraud-detection-credit-mlops-cfn.streamlit.app)
+
+Acesse o dashboard interativo e explore os resultados do modelo em tempo real:
+**https://fraud-detection-credit-mlops-cfn.streamlit.app**
+
+---
+
 ## Autor
 
-**Cláudio Neves**
-Cientista de Dados | Especialização em Crédito & Fraude
+**Cláudio Ferreira Neves**
+
+Especialista em Ciência de Dados e Inteligência Artificial
+
+Especialista em Business Intelligence, Big Data e Analytics
 
 ---
 
