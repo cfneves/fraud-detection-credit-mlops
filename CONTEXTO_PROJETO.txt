@@ -1,0 +1,331 @@
+================================================================================
+  CONTEXTO DO PROJETO — LEIA ESTE ARQUIVO ANTES DE QUALQUER COISA
+  Finalidade: orientar o assistente IA ao retomar o projeto em nova sessão
+  Atualizado em: 2026-03-29
+================================================================================
+
+INSTRUÇÃO PARA O ASSISTENTE
+─────────────────────────────
+Leia este arquivo do início ao fim antes de responder qualquer pergunta.
+Ele contém tudo que foi feito, como está organizado, o que funciona,
+o que está pendente e como o projeto deve evoluir.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. QUEM É O DONO DO PROJETO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Nome         : Cláudio Ferreira Neves
+Perfil       : Especialista em Ciência de Dados e Inteligência Artificial
+               Especialista em Business Intelligence, Big Data e Analytics
+GitHub       : https://github.com/cfneves
+Kaggle user  : claudioneves (token configurado em C:\Users\s2bcl\.kaggle\kaggle.json)
+
+Nível técnico: sênior em dados/BI; em evolução no lado de ML avançado
+Objetivo     : portfólio profissional para vagas sênior no mercado financeiro
+               brasileiro (Serasa, Boa Vista, Nubank, C6, Itaú, Bradesco, etc.)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. O QUE É O PROJETO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pipeline de Machine Learning de nível produção para DETECÇÃO DE FRAUDE
+em cartões de crédito, com:
+
+  - Modelo LightGBM calibrado (isotonic regression)
+  - Balanceamento SMOTE (sampling_ratio=0.1)
+  - Métricas de negócio: KS Statistic, Gini, PSI, Brier Score
+  - Explicabilidade SHAP (global + local + relatório HTML)
+  - Dashboard Streamlit DIDÁTICO (para usuários leigos)
+  - Deploy ativo no Streamlit Cloud
+
+Dataset principal: Credit Card Fraud Detection (Kaggle mlg-ulb)
+  - 284.807 transações reais anonimizadas (PCA → V1-V28)
+  - 492 fraudes (0,17% — desbalanceamento extremo)
+  - Arquivo: data/raw/fraud/creditcard.csv (66 MB, NÃO está no git)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. RESULTADOS DO MODELO (dataset completo — 284.807 linhas)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ROC-AUC          : 0.9488   (meta: > 0.85)  ✓ EXCELENTE
+  PR-AUC           : 0.8789   (meta: > 0.80)  ✓ EXCELENTE
+  KS Statistic     : 89.73    (meta: > 60)    ✓ EXCELENTE
+  Gini             : 89.76    (meta: > 50)    ✓ EXCELENTE
+  PSI              : 0.0000   (< 0.1 estável) ✓ ESTÁVEL
+  Brier Score      : 0.0004   (< 0.10)        ✓ BEM CALIBRADO
+  F1 (threshold*)  : 0.7964   threshold=0.1005
+  FN cost          : R$100    (fraude não detectada)
+  FP cost          : R$5      (falso alarme)
+
+Nota: KS/Gini muito altos porque V1-V28 são features PCA — já otimizadas.
+Em dados reais de produção, KS 40-60 é o esperado.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. LINKS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  GitHub     : https://github.com/cfneves/fraud-detection-credit-mlops
+  Streamlit  : https://fraud-detection-credit-mlops-cfn.streamlit.app
+  Dataset    : https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. ESTRUTURA COMPLETA DE ARQUIVOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  projeto_ml_cred_fraude/
+  │
+  ├── app.py                  PRINCIPAL — Dashboard Streamlit (6 páginas)
+  ├── pipeline.py             PRINCIPAL — Orquestra todo o pipeline de ML
+  ├── data_download.py        Baixa dados do Kaggle via API
+  ├── requirements.txt        Dependências Python
+  ├── README.md               Documentação GitHub (com badges, resultados, roadmap)
+  ├── .gitignore              Protege dados, modelos e credenciais
+  ├── CONTEXTO_PROJETO.txt    ESTE ARQUIVO — contexto para retomada de sessão
+  │
+  ├── src/                    Módulos Python (pacote instalável)
+  │   ├── __init__.py
+  │   ├── engineering.py      Feature engineering (velocidade, desvio, tempo, rede)
+  │   ├── train.py            Modelos: LightGBM, XGBoost, RF, Stacking, Optuna
+  │   ├── metrics.py          KS, Gini, PSI, Brier, custo de negócio, calibração
+  │   └── shap_report.py      SHAP global/local + relatório HTML por transação
+  │
+  ├── config/
+  │   └── config.yaml         Configurações centralizadas (datasets, modelos, etc.)
+  │
+  ├── data/
+  │   ├── raw/fraud/          creditcard.csv — 66MB, NÃO está no git (gitignore)
+  │   └── sample/             creditcard_sample.csv — 2.000 linhas SINTÉTICAS
+  │                           (está no git para o Streamlit Cloud funcionar)
+  │
+  ├── models/saved/           Modelos .pkl gerados após treino (gitignore)
+  └── reports/figures/        Gráficos .png gerados pelo pipeline (gitignore)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. COMO RODAR EM UMA MÁQUINA NOVA (PASSO A PASSO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  PASSO 1 — Clonar o repositório
+    git clone https://github.com/cfneves/fraud-detection-credit-mlops.git
+    cd fraud-detection-credit-mlops
+
+  PASSO 2 — Instalar dependências
+    pip install -r requirements.txt
+    (Python 3.10+ recomendado)
+
+  PASSO 3 — Configurar Kaggle API (para dataset completo)
+    - Acesse: https://www.kaggle.com/settings → Create New Token
+    - Salve o kaggle.json em: ~/.kaggle/kaggle.json
+
+  PASSO 4 — Baixar o dataset real
+    python data_download.py --dataset fraud
+    (baixa 66MB → salva em data/raw/fraud/creditcard.csv)
+
+  PASSO 5 — Rodar o pipeline de ML
+    python pipeline.py --dataset fraud --quick    ← rápido (LightGBM)
+    python pipeline.py --dataset fraud --full     ← completo (todos + stacking)
+
+  PASSO 6 — Abrir o dashboard
+    streamlit run app.py
+    (abre em http://localhost:8501)
+
+  ATENÇÃO: sem o dataset real (passo 3-4), o app funciona com
+  a amostra sintética de 2.000 linhas que já está no repositório.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. DECISÕES TÉCNICAS IMPORTANTES (POR QUE FEZ ASSIM)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  RobustScaler (não StandardScaler)
+    → Transações financeiras têm outliers extremos. RobustScaler usa mediana/IQR.
+
+  PR-AUC como métrica principal (não ROC-AUC)
+    → Com 0.17% de fraudes, ROC-AUC pode ser enganoso. PR-AUC foca nas fraudes.
+
+  SMOTE com sampling_ratio=0.1 (não 0.5)
+    → Oversamplear para 50/50 introduz muito ruído sintético. 10% é suficiente.
+
+  CalibratedClassifierCV (isotonic regression)
+    → LightGBM produz probabilidades extremas. Calibração corrige para compliance.
+
+  Threshold ótimo por custo (FN=R$100, FP=R$5)
+    → Fraude não detectada custa 20x mais que falso alarme. Threshold=0.1005.
+
+  KS/Gini muito altos (89.7/89.8)
+    → Porque V1-V28 são features PCA pré-otimizadas. Em produção real: KS 40-60.
+
+  Amostra sintética no git (2.000 linhas)
+    → Dataset real tem 66MB — acima do limite GitHub/Streamlit Cloud.
+       Amostra garante que o demo online funcione sem credenciais do Kaggle.
+       Métricas reais estão hardcoded em REAL_METRICS no app.py.
+
+  src/ como pacote Python (com __init__.py)
+    → Permite importar com "from src.metrics import ..." de qualquer lugar.
+       Viabiliza futuramente "pip install -e ." para instalação local.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. HISTÓRICO DE COMMITS (O QUE FOI FEITO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  3c972d8  fix: sidebar compacto + README explica dados de amostra
+  6095146  fix: suporte a dados de amostra para Streamlit Cloud
+  a60d3d0  docs: README com autor, link Streamlit, badge produção
+  2f6b810  feat: pipeline ML + dashboard Streamlit (commit inicial)
+
+  Sessão 1 (2026-03-29):
+    - Leu e analisou o projeto → criou BRIEFING_PROJETO.txt (depois removido)
+    - Configurou kaggle.json → baixou dataset (66MB)
+    - Corrigiu imports (src.features.engineering → engineering → src.engineering)
+    - Corrigiu encoding Windows (✓ → [OK], ⚠ → [!])
+    - Rodou pipeline --quick → ROC-AUC 0.9488, PR-AUC 0.8789
+    - Reorganizou arquitetura: raiz → src/, config/
+    - Removeu arquivos sensíveis: kaggle.json, ml_credito_fraude_referencia.md
+    - Criou app.py (Streamlit, 6 páginas, ~1.100 linhas)
+    - Criou README.md, .gitignore profissionais
+    - Deploy no GitHub: github.com/cfneves/fraud-detection-credit-mlops
+    - Configurou About/Topics/Homepage do repo via GitHub API
+    - Corrigiu erro Streamlit Cloud (dataset não encontrado):
+        → Gerou amostra sintética 2.000 linhas
+        → REAL_METRICS hardcoded no app.py
+        → Fallback automático para amostra
+    - Corrigiu sidebar (line-height excessivo)
+    - Atualizou README com explicação dos 2.000 linhas vs 284.807
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. O QUE ESTÁ PENDENTE (PRÓXIMAS SESSÕES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  PRIORIDADE ALTA
+  ───────────────
+  [ ] SHAP quebrado no pipeline
+      Problema: CalibratedClassifierCV envolve o LightGBM base.
+      TreeExplainer não consegue acessar o estimator interno.
+      Solução: extrair base_estimator antes de calibrar e separar os dois.
+
+  [ ] Stacking ensemble completo (FraudModelTrainer.train_all)
+      O modo --full ainda tem import antigo corrigido (src.metrics), mas
+      não foi testado de ponta a ponta. Testar com --full e validar outputs.
+
+  PRIORIDADE MÉDIA
+  ────────────────
+  [ ] Otimização Optuna (optimize_lightgbm em src/train.py)
+      Implementado mas não executado. Rodar 50 trials e documentar resultado.
+
+  [ ] Adicionar LinkedIn e foto do autor ao README e sidebar do Streamlit
+
+  [ ] Página de comparação de modelos no Streamlit
+      Mostrar LightGBM vs XGBoost vs RandomForest vs Stacking lado a lado.
+
+  [ ] Testes unitários básicos para src/engineering.py e src/metrics.py
+
+  PRIORIDADE BAIXA (ROADMAP FUTURO)
+  ──────────────────────────────────
+  [ ] Autoencoder para detecção de anomalias não-supervisionada (PyTorch)
+  [ ] Monitoramento de drift com Evidently (PSI automático)
+  [ ] GNN (PyTorch Geometric) para detecção de redes de fraude
+  [ ] MLflow para rastreamento de experimentos
+  [ ] Análise de vintage (cohort performance ao longo do tempo)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. BUGS CONHECIDOS / PONTOS DE ATENÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  BUG 1 — SHAP não funciona com modelo calibrado
+    Arquivo  : app.py, pipeline.py (seção SHAP)
+    Erro     : "Estimator not fitted, call fit before exploiting the model"
+    Causa    : CalibratedClassifierCV esconde o estimator base
+    Status   : Silenciado com try/except. PRECISA ser corrigido.
+    Solução  : Usar model.estimator ou model.calibrated_classifiers_[0].estimator
+
+  BUG 2 — Encoding Windows (cp1252)
+    Arquivo  : src/metrics.py (linhas 214-222)
+    Erro     : UnicodeEncodeError com caracteres ✓ ⚠ ✗
+    Correção : Substituídos por [OK], [!], [X] — JÁ CORRIGIDO
+    Status   : Resolvido
+
+  ATENÇÃO 1 — FraudFeatureEngineer espera colunas específicas
+    Se usar dataset IEEE-CIS, precisa das colunas: TransactionDT, TransactionAmt,
+    card1-card6, addr1, addr2. O creditcard.csv só tem V1-V28 + Amount + Time —
+    a maioria das features de velocidade/rede não é gerada (dataset não tem card_id).
+
+  ATENÇÃO 2 — __pycache__ no git
+    A pasta __pycache__/ da raiz aparece mas não é comitada (gitignore cobre).
+    Pode aparecer em git status — ignorar.
+
+  ATENÇÃO 3 — data/sample no .gitignore
+    O arquivo foi adicionado com git add -f (força) porque o *.csv está no gitignore.
+    Se alguém rodar git add . sem -f, o arquivo da amostra pode ser ignorado.
+    Para garantir: git add -f data/sample/creditcard_sample.csv
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. STACK TÉCNICA COMPLETA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Linguagem      : Python 3.11 (Windows 11)
+  ML Core        : scikit-learn >= 1.3.0
+  Boosting       : lightgbm >= 4.0.0 | xgboost >= 2.0.0 | catboost >= 1.2.0
+  Imbalance      : imbalanced-learn >= 0.11.0 (SMOTE, ADASYN, SMOTE-ENN)
+  Explicabilidade: shap >= 0.44.0
+  Otimização     : optuna >= 3.4.0
+  Dashboard      : streamlit >= 1.35.0
+  Gráficos       : plotly >= 5.18.0 | matplotlib >= 3.7.0 | seaborn >= 0.12.0
+  Dados          : pandas >= 2.0.0 | numpy >= 1.24.0 | scipy >= 1.11.0
+  Config         : pyyaml >= 6.0
+  Serialização   : joblib >= 1.3.0
+  Kaggle API     : kaggle >= 1.5.16 (versão 2.0 — API mudou, usar CLI: kaggle ...)
+
+  ATENÇÃO kaggle: versão 2.0+ removeu KaggleApiExtended.
+  Usar CLI no terminal: kaggle datasets download mlg-ulb/creditcardfraud
+  O data_download.py usa subprocess ou a nova API — verificar antes de rodar.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. AMBIENTE LOCAL (MÁQUINA ORIGINAL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  SO             : Windows 11 Home Single Language 10.0.26200
+  Python         : 3.11 em C:\Program Files\Python311\
+  Projeto        : C:\Users\s2bcl\OneDrive\Documents\projeto_ml_cred_fraude\
+  kaggle.json    : C:\Users\s2bcl\.kaggle\kaggle.json  (NÃO está no git)
+  Git user       : Cláudio Neves / claudioneves@github
+  Dataset real   : C:\...\data\raw\fraud\creditcard.csv  (66MB, NÃO no git)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+13. INSTRUÇÃO FINAL PARA O ASSISTENTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Ao abrir uma nova sessão com este arquivo:
+
+  1. Confirme que leu o documento respondendo com um resumo de 3 linhas:
+     o que é o projeto, onde está no GitHub/Streamlit, e qual o próximo passo.
+
+  2. Verifique o estado atual dos arquivos com: ls -la e git log --oneline
+
+  3. Antes de qualquer mudança, leia o arquivo relevante com Read.
+
+  4. Todo commit deve incluir:
+     Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+  5. Nunca commitar:
+     - kaggle.json (credencial)
+     - *.csv da pasta data/raw/ (dados brutos 66MB)
+     - *.pkl (modelos serializados)
+     - .env ou qualquer segredo
+
+  6. O usuário é leigo em ML avançado — explicar sempre em linguagem simples.
+     Perguntas técnicas devem ser respondidas com analogias do cotidiano.
+
+================================================================================
+  FIM DO DOCUMENTO — versão 1.0 — 2026-03-29
+================================================================================
