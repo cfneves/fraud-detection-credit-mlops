@@ -218,6 +218,7 @@ with st.sidebar:
             "📈  Resultados do Modelo",
             "🔍  Por que a IA Decidiu Assim?",
             "🎮  Simulador de Transação",
+            "🏦  Casos de Uso Reais",
         ],
         label_visibility="collapsed",
     )
@@ -309,11 +310,13 @@ if pagina == "🏠  Início":
     with c3:
         st.info("**📈 Resultados**\n\nMétricas do modelo explicadas em linguagem simples — sem fórmulas difíceis.")
 
-    c4, c5, _ = st.columns(3)
+    c4, c5, c6 = st.columns(3)
     with c4:
         st.info("**🔍 Por que a IA Decidiu Assim?**\n\nTransparência: entenda quais fatores levaram o modelo a sinalizar uma transação.")
     with c5:
         st.info("**🎮 Simulador**\n\nTeste você mesmo: insira os valores de uma transação e veja o que o modelo diz.")
+    with c6:
+        st.info("**🏦 Casos de Uso Reais**\n\nOnde este modelo é aplicado no mercado: bancos, fintechs, adquirentes, os 5 tipos de fraude mais comuns e o impacto financeiro.")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1253,3 +1256,221 @@ elif pagina == "🎮  Simulador de Transação":
         Uma fraude não detectada pode custar centenas de reais.
         </div>
         """, unsafe_allow_html=True)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PÁGINA 7 — CASOS DE USO REAIS
+# ═══════════════════════════════════════════════════════════════════════════════
+elif pagina == "🏦  Casos de Uso Reais":
+    st.markdown("## 🏦 Casos de Uso Reais")
+    st.markdown("*Para que serve este modelo e onde ele é aplicado no mercado financeiro*")
+
+    st.markdown("""
+    <div class="info-card">
+    O modelo retorna um número entre 0 e 1 — a probabilidade de fraude. Quem define o que
+    fazer com esse número é o banco, não o modelo. A mesma ferramenta pode ter comportamentos
+    diferentes dependendo da política de risco de cada instituição.
+    </div>
+    """, unsafe_allow_html=True)
+
+    # O que o modelo decide
+    st.markdown("---")
+    st.markdown("### O que o modelo decide na prática")
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.markdown("""
+        <table style='width:100%; border-collapse:collapse; font-size:0.9rem'>
+        <tr style='background:#1e293b; color:white'>
+            <th style='padding:10px'>Score do modelo</th>
+            <th style='padding:10px'>Ação típica</th>
+        </tr>
+        <tr style='background:#f0fdf4'>
+            <td style='padding:10px'>Abaixo de 10%</td>
+            <td style='padding:10px'>✅ Autoriza automaticamente</td>
+        </tr>
+        <tr style='background:#f8fafc'>
+            <td style='padding:10px'>10% a 30%</td>
+            <td style='padding:10px'>📋 Monitora, registra para análise posterior</td>
+        </tr>
+        <tr style='background:#fffbeb'>
+            <td style='padding:10px'>30% a 70%</td>
+            <td style='padding:10px'>📱 Solicita autenticação adicional (SMS, biometria)</td>
+        </tr>
+        <tr style='background:#fef2f2'>
+            <td style='padding:10px'>Acima de 70%</td>
+            <td style='padding:10px'>🚨 Bloqueia e notifica o titular imediatamente</td>
+        </tr>
+        </table>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div class="info-card warning">
+        <b>Os limites são ajustáveis</b><br><br>
+        Um banco com clientes mais conservadores pode baixar o threshold — bloqueia mais,
+        erra menos, aceita mais atrito com o usuário.<br><br>
+        Uma fintech digital pode aceitar mais risco para não frustrar o cliente com bloqueios
+        desnecessários.<br><br>
+        O modelo é uma ferramenta. A política de risco é uma decisão de negócio.
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Quem usa
+    st.markdown("---")
+    st.markdown("### Quem usa sistemas como este")
+
+    setores = [
+        ("🏛️ Bancos tradicionais", "Itaú, Bradesco, Caixa, Santander",
+         "Aprovação de transações em tempo real, limite dinâmico, triagem para analistas antifraude.",
+         "#3b82f6"),
+        ("📱 Fintechs", "Nubank, C6, Inter, PicPay",
+         "Antifraude em Pix (decisão em até 10s), onboarding com validação de identidade, chargeback preditivo.",
+         "#8b5cf6"),
+        ("💳 Adquirentes", "Cielo, Stone, Rede, GetNet",
+         "Antifraude no ponto de venda, detecção de terminal adulterado (skimming), comerciante fraudulento.",
+         "#10b981"),
+        ("📊 Bureaus de crédito", "Serasa, Boa Vista",
+         "Enriquecimento de score, detecção de fraude cadastral, validação de identidade (KYC).",
+         "#f59e0b"),
+        ("🛒 E-commerce", "Mercado Livre, Americanas, Shopee",
+         "Aprovação de pedidos antes do envio, detecção de conta laranja, abuso de promoções.",
+         "#ef4444"),
+    ]
+
+    cols = st.columns(len(setores))
+    for i, (titulo, exemplos, desc, cor) in enumerate(setores):
+        with cols[i]:
+            st.markdown(f"""
+            <div style='background:{cor}12; border:1px solid {cor}33; border-radius:10px;
+                        padding:16px; min-height:180px'>
+                <b style='color:{cor}; font-size:0.95rem'>{titulo}</b><br>
+                <small style='color:#64748b'>{exemplos}</small><br><br>
+                <span style='color:#374151; font-size:0.82rem'>{desc}</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # Os 5 tipos de fraude
+    st.markdown("---")
+    st.markdown("### Os 5 tipos de fraude mais comuns")
+
+    fraudes = [
+        (
+            "🃏 Card Testing — teste de cartão",
+            "#ef4444",
+            "O fraudador obtém um lote de cartões clonados e precisa saber quais ainda estão ativos. "
+            "Faz compras muito pequenas — R$1,99, R$0,99 — em serviços de streaming ou apps digitais.",
+            "Valor muito baixo fora do padrão histórico · tentativas em sequência rápida · "
+            "comerciante do tipo 'digital goods' · horário de madrugada"
+        ),
+        (
+            "📡 Skimming — clonagem física",
+            "#f59e0b",
+            "Dispositivos instalados em caixas eletrônicos ou maquininhas capturam os dados do cartão. "
+            "Os dados são vendidos ou usados diretamente — muitas vezes em outro estado ou país.",
+            "Localização geograficamente impossível (SP às 14h, Buenos Aires às 15h) · "
+            "valor acima da média histórica · comerciante nunca usado antes"
+        ),
+        (
+            "🔑 Account Takeover — invasão de conta",
+            "#8b5cf6",
+            "Criminoso obtém as credenciais do cliente via phishing e assume o controle da conta. "
+            "Costuma mudar dados de cadastro (endereço, telefone) antes de fazer compras grandes.",
+            "Login de IP ou dispositivo nunca visto · alteração de dados seguida de compra grande "
+            "em intervalo curto · comportamento de navegação diferente do padrão"
+        ),
+        (
+            "🪪 Synthetic Identity — fraude de identidade",
+            "#06b6d4",
+            "Combinação de CPF real com dados falsos. A identidade não existe — foi criada para fraude. "
+            "O criminoso 'constrói' histórico de crédito por meses antes de pedir crédito alto.",
+            "CPF com histórico inconsistente · dados de contato nunca usados antes · "
+            "abertura de múltiplas contas em período curto · padrão de 'construção de histórico'"
+        ),
+        (
+            "🤝 Friendly Fraud — fraude amiga",
+            "#64748b",
+            "O próprio titular faz uma compra legítima e depois contesta alegando fraude para estornar. "
+            "É o caso mais difícil — o modelo não distingue sozinho, exige análise humana.",
+            "Histórico de contestações anteriores · produto de alto valor e fácil revenda · "
+            "endereço de entrega confirmado · padrão de compra consistente com histórico"
+        ),
+    ]
+
+    for titulo, cor, desc, sinais in fraudes:
+        st.markdown(f"""
+        <div style='border-left:4px solid {cor}; background:{cor}08; border-radius:0 8px 8px 0;
+                    padding:16px 20px; margin:10px 0'>
+            <b style='color:{cor}; font-size:1rem'>{titulo}</b><br>
+            <span style='color:#374151; font-size:0.9rem'>{desc}</span><br>
+            <div style='margin-top:8px; padding:8px 12px; background:white; border-radius:6px;
+                        font-size:0.8rem; color:#64748b'>
+                <b>Sinais que o modelo detecta:</b> {sinais}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Impacto financeiro
+    st.markdown("---")
+    st.markdown("### Por que o threshold importa tanto")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="label">Custo médio — Fraude não detectada (FN)</div>
+            <div class="value" style='color:#ef4444'>2x a 3x</div>
+            <div class="subtext">o valor da transação original
+            (reembolso + multa da bandeira + custo operacional)</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="label">Custo médio — Falso alarme (FP)</div>
+            <div class="value" style='color:#f59e0b'>R$ 5–15</div>
+            <div class="subtext">por ocorrência
+            (atendimento ao cliente + atrito com o usuário)</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="label">Threshold deste modelo</div>
+            <div class="value" style='color:#10b981'>0.1005</div>
+            <div class="subtext">calculado pelo custo assimétrico,
+            não pelo F1 genérico do livro didático</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="info-card" style='margin-top:12px'>
+    <b>Por que 0.1005 e não 0.5?</b><br><br>
+    O threshold padrão de 0.5 (metade da probabilidade) assume que os dois tipos de erro
+    custam igual. Não custam. Uma fraude não detectada custa 20x mais que um falso alarme.<br><br>
+    Com threshold 0.1005, o modelo bloqueia qualquer transação com mais de 10% de chance
+    de fraude. Isso aumenta os falsos alarmes, mas reduz muito mais as fraudes que passam.
+    A diferença entre threshold 0.5 e 0.1 pode representar milhões de reais por mês para
+    uma instituição com alto volume de transações.
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Limitações honestas
+    st.markdown("---")
+    st.markdown("### O que o modelo não faz")
+
+    st.markdown("""
+    <div class="info-card danger">
+    <b>Limitações reais — é importante ser honesto sobre isso</b><br><br>
+    <b>Não substitui análise humana.</b> Casos com score médio (30–70%) geralmente vão para
+    analistas. O modelo prioriza a fila, não elimina o trabalho humano.<br><br>
+    <b>Degrada ao longo do tempo.</b> Fraudadores se adaptam. Um modelo treinado hoje perde
+    performance em 6–12 meses sem retreinamento. O PSI monitora isso, mas não conserta sozinho.<br><br>
+    <b>Não lida bem com fraude completamente nova.</b> Se um padrão nunca visto antes aparece
+    no mercado, o modelo demora para aprender. Regras manuais dos analistas ainda são necessárias
+    para novos vetores de ataque.<br><br>
+    <b>Friendly fraud é o caso mais difícil.</b> Quando o próprio titular simula uma fraude para
+    pedir estorno, o comportamento é idêntico ao de uma compra legítima. Detectar isso exige
+    análise de histórico comportamental, não só a transação isolada.
+    </div>
+    """, unsafe_allow_html=True)
