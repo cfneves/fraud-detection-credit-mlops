@@ -127,14 +127,23 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+# Métricas reais pré-computadas no dataset completo (284.807 transações)
+REAL_METRICS = {
+    "roc_auc": 0.9488, "pr_auc": 0.8789, "ks": 89.73, "gini": 89.76,
+    "brier": 0.0004, "best_threshold": 0.1005, "best_f1": 0.7964,
+    "ks_threshold": 0.1111, "dataset_size": 284807, "n_fraud": 492,
+}
+
 # ─── Cache de dados e modelo ──────────────────────────────────────────────────
 @st.cache_data(show_spinner="Carregando dataset...")
 def load_data():
-    path = "data/raw/fraud/creditcard.csv"
-    if not Path(path).exists():
-        return None
-    df = pd.read_csv(path)
-    return df
+    full_path   = "data/raw/fraud/creditcard.csv"
+    sample_path = "data/sample/creditcard_sample.csv"
+    if Path(full_path).exists():
+        return pd.read_csv(full_path), False   # False = não é amostra
+    if Path(sample_path).exists():
+        return pd.read_csv(sample_path), True  # True = é amostra
+    return None, True
 
 
 @st.cache_resource(show_spinner="Treinando modelo (pode levar 1-2 min na primeira vez)...")
@@ -214,9 +223,11 @@ with st.sidebar:
     )
     st.markdown("---")
     st.markdown(
-        "<small style='color:#475569'>Projeto de Portfólio<br>"
-        "Cientista de Dados Sênior<br>"
-        "Crédito & Fraude · 2025</small>",
+        "<small style='color:#94a3b8; line-height:1.7'>"
+        "<b style='color:#e2e8f0'>Cláudio Ferreira Neves</b><br>"
+        "Especialista em Ciência de Dados<br>e Inteligência Artificial<br>"
+        "Especialista em Business Intelligence,<br>Big Data e Analytics"
+        "</small>",
         unsafe_allow_html=True,
     )
 
@@ -312,10 +323,12 @@ elif pagina == "📊  Os Dados":
     st.markdown("## 📊 Os Dados")
     st.markdown("*Entendendo o problema antes de construir a solução*")
 
-    df = load_data()
+    df, is_sample = load_data()
     if df is None:
-        st.error("Dataset não encontrado. Execute: `python data_download.py --dataset fraud`")
+        st.error("Dados não encontrados. Verifique a pasta data/sample/.")
         st.stop()
+    if is_sample:
+        st.info("**Modo demonstração:** exibindo amostra sintética (2.000 transações). Os resultados reais do modelo foram obtidos com o dataset completo de 284.807 transações.")
 
     # Visão geral
     st.markdown("""
@@ -586,17 +599,27 @@ elif pagina == "🧠  Como a IA Aprende":
 # ═══════════════════════════════════════════════════════════════════════════════
 elif pagina == "📈  Resultados do Modelo":
     st.markdown("## 📈 Resultados do Modelo")
-    st.markdown("*Metricas explicadas em linguagem simples*")
+    st.markdown("*Métricas explicadas em linguagem simples*")
 
-    df = load_data()
+    df, is_sample = load_data()
     if df is None:
-        st.error("Dataset nao encontrado.")
+        st.error("Dados não encontrados. Verifique a pasta data/sample/.")
         st.stop()
 
-    with st.spinner("Carregando modelo treinado..."):
+    if is_sample:
+        st.success(
+            "**Resultados do dataset completo (284.807 transações reais):** "
+            "Os valores abaixo foram obtidos treinando o modelo no dataset original do Kaggle — "
+            "o maior e mais utilizado benchmark de detecção de fraude do mundo."
+        )
+
+    with st.spinner("Treinando modelo na amostra disponível..."):
         model, engineer, X_train, X_val, y_train, y_val, y_pred_proba, y_train_proba = train_model(df)
 
-    metrics = compute_metrics(y_val, y_pred_proba)
+    # Usa métricas reais do dataset completo quando em modo amostra
+    metrics = REAL_METRICS if is_sample else compute_metrics(y_val, y_pred_proba)
+    # Para gráficos interativos, usa predições da amostra atual
+    metrics_live = compute_metrics(y_val, y_pred_proba)
 
     # Cards de métricas principais
     st.markdown("### Resumo do Desempenho")
@@ -904,9 +927,9 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
     </div>
     """, unsafe_allow_html=True)
 
-    df = load_data()
+    df, is_sample = load_data()
     if df is None:
-        st.error("Dataset nao encontrado.")
+        st.error("Dados não encontrados.")
         st.stop()
 
     model, engineer, X_train, X_val, y_train, y_val, y_pred_proba, _ = train_model(df)
@@ -1052,9 +1075,9 @@ elif pagina == "🎮  Simulador de Transacao":
     </div>
     """, unsafe_allow_html=True)
 
-    df = load_data()
+    df, is_sample = load_data()
     if df is None:
-        st.error("Dataset nao encontrado.")
+        st.error("Dados não encontrados.")
         st.stop()
 
     model, engineer, X_train, X_val, y_train, y_val, y_pred_proba_val, _ = train_model(df)

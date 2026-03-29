@@ -37,6 +37,10 @@ data/processed/
 *.csv
 *.parquet
 *.feather
+# Exceção: amostra sintética para demo do Streamlit Cloud
+!data/sample/creditcard_sample.csv
+*.parquet
+*.feather
 *.pkl
 *.h5
 *.hdf5
