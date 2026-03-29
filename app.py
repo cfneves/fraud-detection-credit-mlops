@@ -1060,8 +1060,8 @@ elif pagina == "🔍  Por que a IA Decidiu Assim?":
 # ═══════════════════════════════════════════════════════════════════════════════
 # PÁGINA 6 — SIMULADOR
 # ═══════════════════════════════════════════════════════════════════════════════
-elif pagina == "🎮  Simulador de Transacao":
-    st.markdown("## 🎮 Simulador de Transacao")
+elif pagina == "🎮  Simulador de Transação":
+    st.markdown("## 🎮 Simulador de Transação")
     st.markdown("*Teste voce mesmo: insira os dados de uma transacao e veja o que o modelo diz*")
 
     st.markdown("""
